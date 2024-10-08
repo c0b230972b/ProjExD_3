@@ -141,6 +141,23 @@ class Bomb:
         screen.blit(self.img, self.rct)
 
 
+class Score:
+    """
+    スコア表示に関するクラス
+    """
+    def __init__(self):
+        self.fonto = pg.font.SysFont("hgp創英角ポップ体", 30)  # フォントの設定
+        self.color = (0,0, 255)  # 文字色の設定
+        self.score = 0  # スコアの初期値の設定
+        self.img = self.fonto.render(f"Score:{self.score}", 0, self.color)  # 文字列Surfaceの生成
+        self.rct = self.img.get_rect()
+        self.rct.center = (100, HEIGHT-50)  # 文字列の中心座標
+    
+    def update(self, screen: pg.Surface):
+        self.img = self.fonto.render(f"Score:{self.score}", 0, self.color)
+        screen.blit(self.img, self.rct)
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -149,6 +166,7 @@ def main():
     beam = None
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     bomb = Bomb((255, 0, 0), 10)
+    score = Score()
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -170,19 +188,21 @@ def main():
                 pg.display.update()
                 time.sleep(5)
                 return
+            
 
-        
         for j, bomb in enumerate(bombs):
             if beam is not None:
                 if beam.rct.colliderect(bomb.rct):  #ビームと爆弾が衝突したら
                     beam, bombs[j] = None, None  #bombリストのj番目をNoneにする
                     bird.change_img(6, screen)
+                    score.score += 1
+                    score.update(screen)
                     pg.display.update()
-                    time.sleep(1)
         bombs = [bomb for bomb in bombs if bomb is not None]
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
+        score.update(screen)
         if beam is not None:
             beam.update(screen) 
         for bomb in bombs:

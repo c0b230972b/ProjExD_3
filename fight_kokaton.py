@@ -147,7 +147,7 @@ class Score:
     """
     def __init__(self):
         """
-        スコアの表示と、現在のスコアに更新
+        スコアの表示
         """
         self.fonto = pg.font.SysFont("hgp創英角ポップ体", 30)  # フォントの設定
         self.color = (0,0, 255)  # 文字色の設定
